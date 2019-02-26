@@ -19,29 +19,23 @@ import java.util.stream.Collectors;
 public class Application {
     public static void main(String[] args) throws IOException {
 
-//        String fileName = "D:\\tmp\\xml\\2012\\PFR-700-Y-2012-ORG-039-023-000122-DCK-00308-DPT-000000-DCK-00000.XML";
-
         List<File> fileList = Files.walk(Paths.get(args[0]))
                 .filter(Files::isRegularFile)
                 .map(Path::toFile)
                 .filter(p -> p.toString().toUpperCase().contains(".XML"))
                 .collect(Collectors.toList());
 
-//        fileList.stream().forEach(System.out::println);
         System.out.println(fileList.size());
+
         System.out.println(new Date());
 
         Map<String, Person> persons = new HashMap<>();
 
-//        List<Person> persons = new ArrayList<>();
-
         for (File ff : fileList) {
 
             try {
-//            File fileILS = new File(fileName);
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = dbf.newDocumentBuilder();
-//            Document doc = db.parse(fileILS);
                 Document doc = db.parse(ff);
 
                 doc.getDocumentElement().normalize();
@@ -55,7 +49,6 @@ public class Application {
                 }
 
                 if (nodeList.getLength() != 0) {
-//                    System.out.println("Обработка файла " + ff);
                     for (int i = 0; i < nodeList.getLength(); i++) {
                         Person person = new Person();
                         Node node = nodeList.item(i);
@@ -81,13 +74,9 @@ public class Application {
             }
         }
         System.out.println(persons.size());
-
         try (FileWriter writer = new FileWriter("list.csv")) {
-
             List<String> lp = new ArrayList<>(persons.keySet());
-
             Collections.sort(lp);
-
             for (int i = 0; i < lp.size(); i++) {
                 Person person = persons.get(lp.get(i));
                 String line = (i + 1) + ";" +
@@ -98,14 +87,9 @@ public class Application {
                 writer.write(line);
                 writer.flush();
             }
-
-
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
         System.out.println(new Date());
-
     }
-
-
 }
